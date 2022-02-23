@@ -6,7 +6,7 @@ public class Main {
     public static String[][] gameGrid = {
             {" ", " ", " "},
             {" ", " ", " "},
-            {" ", " ", " "}
+            {" ", " ", "0"}
     };
 
     public static void display(String[][] grid) {
