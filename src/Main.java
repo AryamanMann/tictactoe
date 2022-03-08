@@ -8,7 +8,8 @@ public class Main {
             {" ", " ", " "},
             {" ", " ", " "}
     };
-
+    public static String userChar = "X";
+    public static int count = 0;
     public static void display(String[][] grid) {
         System.out.println("---------");
         System.out.println("| " + grid[0][0] + " " + grid[0][1] + " " + grid[0][2] + " |");
@@ -41,140 +42,75 @@ public class Main {
             System.out.println("The cell is occupied! Choose another one!");
             promptUser();
         } else {
-            grid[coordinates[0] - 1][coordinates[1] - 1] = "X";
+            grid[coordinates[0] - 1][coordinates[1] - 1] = userChar;
+            count();
+            display(gameGrid);
+        }
+        switch (userChar) {
+            case "X" -> userChar = "O";
+            case "O" -> userChar = "X";
+        }
+        if (count == 9 && !checkWinnerO() && !checkWinnerX()) {
+            System.out.println("Draw");
+        } else if (checkWinnerO()) {
+            System.out.println("O wins");
+        } else if (checkWinnerX()) {
+            System.out.println("X wins");
+        } else {
+            promptUser();
         }
     }
 
-    public static void main(String[] args) {
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("Enter cells: ");
-            String arr = scanner.nextLine().toUpperCase();
-            int counter = 0;
-            for (int i = 0; i < gameGrid.length; i++) {
-                for (int j = 0; j < gameGrid[i].length; j++) {
-                    String str = Character.toString(arr.charAt(counter));
-                    String cell = str.equals("_") ? " " : str;
-                    gameGrid[i][j] = cell;
-                    counter++;
+    public static void count() {
+        count++;
+    }
+
+    public static boolean checkWinnerX() {
+        boolean isWinnerX = gameGrid[0][0].equals("X") && gameGrid[0][0].equals(gameGrid[1][1]) && gameGrid[1][1].equals(gameGrid[2][2]);
+        if (gameGrid[0][2].equals("X") && gameGrid[0][2].equals(gameGrid[1][1]) && gameGrid[1][1].equals(gameGrid[2][0])) isWinnerX = true;
+        int rowCounterX = 0;
+        int colCounterX = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 2; j++) {
+                boolean rowEqualX = gameGrid[i][j].equals("X") && gameGrid[i][(j + 1)].equals("X");
+                boolean colEqualX = gameGrid[j][i].equals("X") && gameGrid[(j + 1)][i].equals("X");
+                rowCounterX = rowEqualX ? rowCounterX + 1 : 0;
+                colCounterX = colEqualX ? colCounterX + 1 : 0;
+                if (rowCounterX == 2 || colCounterX == 2) {
+                    isWinnerX = true;
+                    break;
                 }
             }
-
-            display(gameGrid);
-            promptUser();
-            display(gameGrid);
         }
+        return isWinnerX;
+    }
+
+    public static boolean checkWinnerO() {
+        boolean isWinnerO = gameGrid[0][0].equals("O") && gameGrid[0][0].equals(gameGrid[1][1]) && gameGrid[1][1].equals(gameGrid[2][2]);
+        if (gameGrid[0][2].equals("O") && gameGrid[0][2].equals(gameGrid[1][1]) && gameGrid[1][1].equals(gameGrid[2][0])) isWinnerO = true;
+        int rowCounterO = 0;
+        int colCounterO = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 2; j++) {
+                boolean rowEqualO = gameGrid[i][j].equals("O") && gameGrid[i][(j + 1)].equals("O");
+                boolean colEqualO = gameGrid[j][i].equals("O") && gameGrid[(j + 1)][i].equals("O");
+                rowCounterO = rowEqualO ? rowCounterO + 1 : 0;
+                colCounterO = colEqualO ? colCounterO + 1 : 0;
+                if (rowCounterO == 2 || colCounterO == 2) {
+                    isWinnerO = true;
+                    break;
+                }
+            }
+        }
+        return isWinnerO;
+    }
+
+    public static void main(String[] args) {
+        display(gameGrid);
+        promptUser();
     }
 }
 
 
-//import java.util.Scanner;
-//public class analyzeGame {
-//
-//    static String[][] grid = new String[3][3];
-//    static String arr;
-//    static final char elementX = 'X';
-//    static final char elementO = 'O';
-//    static boolean winnerX;
-//    static boolean winnerO;
-//
-//    public static void main(String[] args) {
-//        printGrid();
-//        winnerX = checkWinnerX();
-//        winnerO = checkWinnerO();
-//        boolean impossible = checkImpossible();
-//        boolean spacesOrUnderscores = checkSpaces();
-//
-//        if (!impossible) {
-//            if (spacesOrUnderscores && !winnerO && !winnerX) System.out.print("Game not finished");
-//            if (!spacesOrUnderscores && !winnerO && !winnerX) System.out.print("Draw");
-//            if (winnerX) {
-//                System.out.print("X wins");
-//            } else if (winnerO) {
-//                System.out.print("O wins");
-//            }
-//        } else {
-//            System.out.print("Impossible");
-//        }
-//    }
-//
-//    public static void printGrid() {
-//        try(Scanner scanner = new Scanner(System.in)) {
-//            System.out.print("Enter cells: ");
-//            arr = scanner.next().toUpperCase();
-//            int counter = 0;
-//            for (int i = 0; i < grid.length; i++) {
-//                for (int j = 0; j < grid[i].length; j++) {
-//                    grid[i][j] = Character.toString(arr.charAt(counter));
-//                    counter++;
-//                }
-//            }
-//            System.out.println("---------");
-//            System.out.println("| " + grid[0][0] + " " + grid[0][1] + " " + grid[0][2] + " |");
-//            System.out.println("| " + grid[1][0] + " " + grid[1][1] + " " + grid[1][2] + " |");
-//            System.out.println("| " + grid[2][0] + " " + grid[2][1] + " " + grid[2][2] + " |");
-//            System.out.println("---------");
-//        }
-//    }
-//
-//    public static boolean checkWinnerX() {
-//        boolean isWinnerX = false;
-//        if (grid[0][0].equals("X") && grid[0][0].equals(grid[1][1]) && grid[1][1].equals(grid[2][2])) isWinnerX = true;
-//        if (grid[0][2].equals("X") && grid[0][2].equals(grid[1][1]) && grid[1][1].equals(grid[2][0])) isWinnerX = true;
-//        int rowCounterX = 0;
-//        int colCounterX = 0;
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 2; j++) {
-//                boolean rowEqualX = grid[i][j].equals("X") && grid[i][(j + 1)].equals("X");
-//                boolean colEqualX = grid[j][i].equals("X") && grid[(j + 1)][i].equals("X");
-//                rowCounterX = rowEqualX ? rowCounterX + 1 : 0;
-//                colCounterX = colEqualX ? colCounterX + 1 : 0;
-//                if (rowCounterX == 2 || colCounterX == 2) {
-//                    isWinnerX = true;
-//                    break;
-//                }
-//            }
-//        }
-//        return isWinnerX;
-//    }
-//
-//    public static boolean checkWinnerO() {
-//        boolean isWinnerO = false;
-//        if (grid[0][0].equals("O") && grid[0][0].equals(grid[1][1]) && grid[1][1].equals(grid[2][2])) isWinnerO = true;
-//        if (grid[0][2].equals("O") && grid[0][2].equals(grid[1][1]) && grid[1][1].equals(grid[2][0])) isWinnerO = true;
-//        int rowCounterO = 0;
-//        int colCounterO = 0;
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 2; j++) {
-//                boolean rowEqualO = grid[i][j].equals("O") && grid[i][(j + 1)].equals("O");
-//                boolean colEqualO = grid[j][i].equals("O") && grid[(j + 1)][i].equals("O");
-//                rowCounterO = rowEqualO ? rowCounterO + 1 : 0;
-//                colCounterO = colEqualO ? colCounterO + 1 : 0;
-//                if (rowCounterO == 2 || colCounterO == 2) {
-//                    isWinnerO = true;
-//                    break;
-//                }
-//            }
-//        }
-//        return isWinnerO;
-//    }
-//
-//    public static boolean checkImpossible() {
-//        boolean isImpossible = false;
-//        int countX = 0;
-//        int countO = 0;
-//        if (winnerO && winnerX) isImpossible = true;
-//        for (int i = 0; i < arr.length(); i++) {
-//            if (arr.charAt(i) == elementX) countX++;
-//            if (arr.charAt(i) == elementO) countO++;
-//        }
-//        if (countO - countX >= 2 || countX - countO >= 2) isImpossible = true;
-//        return isImpossible;
-//    }
-//
-//    public static boolean checkSpaces() {
-//        return arr.contains(" ") || arr.contains("_");
-//    }
-//}
-//
-//
+
 
